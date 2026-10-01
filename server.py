@@ -18,9 +18,19 @@ def get_events():
 @app.route("/events", methods=["POST"])
 def add_event():
     data = request.get_json()
-    new_id = max((e["id"] for e in events), default=0) + 1
-    new_event = {"id": new_id, "title": data["title"]}
-    products.append(new_event)
+
+    if not data or "title" not in data:
+        return jsonify({"error": "Title is required"}), 400
+
+    new_id = len(events) + 1
+
+    new_event = {
+        "id": new_id,
+        "title": data["title"]
+    }
+
+    events.append(new_event)
+
     return jsonify(new_event), 201
 
 if __name__ == "__main__":
